@@ -3,6 +3,7 @@ package roadgraph;
 import geography.GeographicPoint;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by BSV on 29.09.2016.
@@ -10,25 +11,39 @@ import java.util.HashMap;
 public class Node {
 
     private final GeographicPoint geographicPoint;
-    private HashMap <GeographicPoint, Float> neighbours = new HashMap<>();
 
-    public Node(GeographicPoint geographicPoint, HashMap<GeographicPoint, Float> neighbours) {
+    private HashSet<Edge> neighbours = new HashSet<>();
+
+    public Node(GeographicPoint geographicPoint) {
         this.geographicPoint = geographicPoint;
-        this.neighbours = neighbours;
     }
 
     public GeographicPoint getGeographicPoint() {
-        return geographicPoint;
+        return new GeographicPoint(geographicPoint.getX(),geographicPoint.getY());
     }
 
-    public HashMap<GeographicPoint, Float> getNeighbours() {
-        return neighbours;
+
+    public HashSet<Edge> getNeighbours() {
+        return new HashSet<>(neighbours);
     }
 
-    public void addNeighbour(Node neighbour) {
-        this.neighbours.put(neighbour.getGeographicPoint(), 0f);
+    public boolean addNeighbours(Edge neighbours) {
+        return this.neighbours.add(neighbours);
     }
-    public void addNeighbour(Node neighbour, Float distanceToNeighbour) {
-        this.neighbours.put(neighbour.getGeographicPoint(), distanceToNeighbour);
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return geographicPoint.equals(node.geographicPoint);
+    }
+
+    @Override
+    public int hashCode() {
+        return geographicPoint.hashCode();
     }
 }
