@@ -14,6 +14,8 @@ public class Node {
 
     private HashSet<Edge> neighbours = new HashSet<>();
 
+
+
     public Node(GeographicPoint geographicPoint) {
         this.geographicPoint = geographicPoint;
     }
@@ -46,4 +48,5 @@ public class Node {
     public int hashCode() {
         return geographicPoint.hashCode();
     }
+
 }

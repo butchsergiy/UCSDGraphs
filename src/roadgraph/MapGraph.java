@@ -25,63 +25,63 @@ import util.GraphLoader;
 public class MapGraph {
 	//TODO: Add your member variables here in WEEK 3
 
-//	private List<Node> verticesArrayList = new ArrayList<>();
+	//	private List<Node> verticesArrayList = new ArrayList<>();
 //	private List<Node> verticesLinkedList = new LinkedList<>();
 	private HashSet<Node> verticesHashSet = new HashSet<>();
-//	private HashSet<Edge> edgesHashSet = new HashSet<>();
+	//	private HashSet<Edge> edgesHashSet = new HashSet<>();
 	private int numVertices = 0;
 	private int numEdges = 0;
 
-	/** 
-	 * Create a new empty MapGraph 
+	/**
+	 * Create a new empty MapGraph
 	 */
-	public MapGraph()
-	{
+	public MapGraph() {
 		// TODO: Implement in this constructor in WEEK 3
 	}
 
 	/**
 	 * Get the number of vertices (road intersections) in the graph
+	 *
 	 * @return The number of vertices in the graph.
 	 */
-	public int getNumVertices()
-	{
+	public int getNumVertices() {
 		return this.numVertices;
 	}
 
 	/**
 	 * Get the number of road segments in the graph
+	 *
 	 * @return The number of edges in the graph.
 	 */
-	public int getNumEdges()
-	{
+	public int getNumEdges() {
 		return this.numEdges;
 	}
 
 
 	/**
 	 * Return the intersections, which are the vertices in this graph.
+	 *
 	 * @return The vertices in this graph as GeographicPoints
 	 */
-	public Set<GeographicPoint> getVertices()
-	{
+	public Set<GeographicPoint> getVertices() {
 		Set<GeographicPoint> vertices = new HashSet<>();
 		verticesHashSet.forEach(v -> vertices.add(v.getGeographicPoint()));
 		return vertices;
 	}
 
 
-	/** Add a node corresponding to an intersection at a Geographic Point
+	/**
+	 * Add a node corresponding to an intersection at a Geographic Point
 	 * If the location is already in the graph or null, this method does
 	 * not change the graph.
-	 * @param location  The location of the intersection
+	 *
+	 * @param location The location of the intersection
 	 * @return true if a node was added, false if it was not (the node
 	 * was already in the graph, or the parameter is null).
 	 */
-	public boolean addVertex(GeographicPoint location)
-	{
-		if(location == null) return false;
-		if(verticesHashSet.add(new Node(location))) {
+	public boolean addVertex(GeographicPoint location) {
+		if (location == null) return false;
+		if (verticesHashSet.add(new Node(location))) {
 			this.numVertices++;
 			return true;
 		}
@@ -89,82 +89,130 @@ public class MapGraph {
 	}
 
 	/**
-	 * Adds a directed edge to the graph from pt1 to pt2.  
+	 * Adds a directed edge to the graph from pt1 to pt2.
 	 * Precondition: Both GeographicPoints have already been added to the graph
-	 * @param from The starting point of the edge
-	 * @param to The ending point of the edge
+	 *
+	 * @param from     The starting point of the edge
+	 * @param to       The ending point of the edge
 	 * @param roadName The name of the road
 	 * @param roadType The type of the road
-	 * @param length The length of the road, in km
+	 * @param length   The length of the road, in km
 	 * @throws IllegalArgumentException If the points have not already been
-	 *   added as nodes to the graph, if any of the arguments is null,
-	 *   or if the length is less than 0.
+	 *                                  added as nodes to the graph, if any of the arguments is null,
+	 *                                  or if the length is less than 0.
 	 */
 	public void addEdge(GeographicPoint from, GeographicPoint to, String roadName,
-			String roadType, double length) throws IllegalArgumentException {
+						String roadType, double length) throws IllegalArgumentException {
 
-		if(!verticesHashSet.contains(new Node(from))
-		 	|| !verticesHashSet.contains(new Node(to))
+		if (!verticesHashSet.contains(new Node(from))
+				|| !verticesHashSet.contains(new Node(to))
 				|| from == null
 				|| to == null
 				|| roadName == null
 				|| roadType == null
 				|| length < 0
-				) 	throw new IllegalArgumentException("Either the two points are not in the graph already, any of the arguments is null, or if length is less than 0.");
+				)
+			throw new IllegalArgumentException("Either the two points are not in the graph already, any of the arguments is null, or if length is less than 0.");
 
-		for(Node node : verticesHashSet){
-			if(node.getGeographicPoint().equals(from)){
+		for (Node node : verticesHashSet) {
+			if (node.getGeographicPoint().equals(from)) {
 				node.addNeighbours(new Edge(from, to, roadName, roadType, length));
 			}
 		}
 		this.numEdges++;
 	}
-	
 
-	/** Find the path from start to goal using breadth first search
-	 * 
+
+	/**
+	 * Find the path from start to goal using breadth first search
+	 *
 	 * @param start The starting location
-	 * @param goal The goal location
+	 * @param goal  The goal location
 	 * @return The list of intersections that form the shortest (unweighted)
-	 *   path from start to goal (including both start and goal).
+	 * path from start to goal (including both start and goal).
 	 */
 	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint goal) {
 		// Dummy variable for calling the search algorithms
-        Consumer<GeographicPoint> temp = (x) -> {};
-        return bfs(start, goal, temp);
+		Consumer<GeographicPoint> temp = (x) -> {
+		};
+		return bfs(start, goal, temp);
 	}
-	
-	/** Find the path from start to goal using breadth first search
-	 * 
-	 * @param start The starting location
-	 * @param goal The goal location
+
+	/**
+	 * Find the path from start to goal using breadth first search
+	 *
+	 * @param start        The starting location
+	 * @param goal         The goal location
 	 * @param nodeSearched A hook for visualization.  See assignment instructions for how to use it.
 	 * @return The list of intersections that form the shortest (unweighted)
-	 *   path from start to goal (including both start and goal).
+	 * path from start to goal (including both start and goal).
 	 */
-	public List<GeographicPoint> bfs(GeographicPoint start, 
-			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
+	public List<GeographicPoint> bfs(GeographicPoint start,
+									 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
 		// Hook for visualization.  See writeup.
 		//nodeSearched.accept(next.getLocation());
 
 		Queue<Node> nodeQueue = new LinkedList<>();
-		HashSet<Node> visited = new HashSet<>();
-		HashMap<Node,Node> path = new HashMap(); // why HashMap ???
+		HashSet<Node> visitedSet = new HashSet<>();
+		HashMap<Node, Node> pathMap = new HashMap(); // parents map
 
-		nodeQueue.add(verticesHashSet. (start));
-		while(!nodeQueue.isEmpty()){
+		Node startNode = getNode(start);
+		Node endNode = getNode(goal);
+		Node currentNode;
+		nodeQueue.add(startNode);
+		visitedSet.add(startNode);
 
+		while (!nodeQueue.isEmpty()) {
+			currentNode = nodeQueue.poll();
+			if (currentNode.equals(endNode)) break;
 
-
+			// put not visited current node neighbours to queue, visitedSet and pathMap(parents map)
+			for (Node nodeNext : getNeighboursCollection(currentNode)) {
+				if (!visitedSet.contains(nodeNext)) {
+					nodeQueue.add(nodeNext);
+					visitedSet.add(nodeNext);
+					pathMap.put(nodeNext, currentNode);
+				}
+			}
 		}
-
-		return convertMapToList(path);
+		return convertMapToList(pathMap, startNode,endNode);
 	}
 
-	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path) {
-
+	private Node getNode(GeographicPoint start) {
+		for (Node node : verticesHashSet) {
+			if (node.getGeographicPoint().equals(start))
+				return node;
+		}
 		return null;
+	}
+
+	public HashSet<Node> getNeighboursCollection(Node node) {
+		HashSet<Node> neighboursHashSet = new HashSet<>();
+		for (Edge neighbour : node.getNeighbours()) {
+			neighboursHashSet.add(getNode(neighbour.getTo()));
+		}
+	return neighboursHashSet;
+	}
+
+
+	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node startNode, Node endNode) {
+
+		LinkedList<GeographicPoint> pathList = new LinkedList();
+		Node currentNode = endNode;
+		Node parent;
+
+		pathList.add(endNode.getGeographicPoint());
+
+		// pathMap is empty because start point and end point are same and there aren't any parents in map.
+		if(path.isEmpty()) return pathList;
+
+		while(path.containsKey(currentNode)){
+			parent = path.get(currentNode);
+			pathList.addFirst(parent.getGeographicPoint());
+			currentNode = parent;
+		}
+
+		return pathList;
 	}
 
 

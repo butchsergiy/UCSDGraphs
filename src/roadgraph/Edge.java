@@ -12,6 +12,11 @@ import geography.GeographicPoint;
 public class Edge {
 
     private final GeographicPoint from;
+
+    public GeographicPoint getTo() {
+        return new GeographicPoint(to.getX(), to.getY());
+    }
+
     private final GeographicPoint to;
     private final String roadName;
     private final String roadType;      // the roadType is the kind of road (e.g. "residential").
