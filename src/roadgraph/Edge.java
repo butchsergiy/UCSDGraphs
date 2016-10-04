@@ -5,22 +5,24 @@ import geography.GeographicPoint;
 /**
  * Class represents edge between two GeographicPoints (lat, lon pairs) that are already in the graph.
  * The edges represent streets segments, and hence they connect intersections.
- * @param roadName is the name of the road (e.g. "Main street")
- * @param roadType The type of the road(e.g. "residential").
- * @param length is the length of this road segment, in km.
  */
 public class Edge {
 
     private final GeographicPoint from;
-
-    public GeographicPoint getTo() {
-        return new GeographicPoint(to.getX(), to.getY());
-    }
-
     private final GeographicPoint to;
     private final String roadName;
     private final String roadType;      // the roadType is the kind of road (e.g. "residential").
     private final double length;        // the length of this road segment, in km.
+
+
+/**
+ * Class represents edge between two GeographicPoints (lat, lon pairs) that are already in the graph.
+ * The edges represent streets segments, and hence they connect intersections.
+ *
+ * @param roadName is the name of the road (e.g. "Main street")
+ * @param roadType The type of the road(e.g. "residential").
+ * @param length is the length of this road segment, in km.
+ */
 
     public Edge(GeographicPoint from, GeographicPoint to, String roadName, String roadType, double length) {
         this.from = from;
@@ -28,6 +30,10 @@ public class Edge {
         this.roadName = roadName;
         this.roadType = roadType;
         this.length = length;
+    }
+
+    public GeographicPoint getTo() {
+        return new GeographicPoint(to.getX(), to.getY());
     }
 
     @Override

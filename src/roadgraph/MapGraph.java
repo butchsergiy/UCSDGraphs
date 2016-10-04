@@ -11,9 +11,11 @@ package roadgraph;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import org.perf4j.log4j.Log4JStopWatch;
 
 import geography.GeographicPoint;
 import util.GraphLoader;
+
 
 /**
  * @author UCSD MOOC development team and ButchSergiy
@@ -23,12 +25,13 @@ import util.GraphLoader;
  *
  */
 public class MapGraph {
-	//TODO: Add your member variables here in WEEK 3
 
-	//	private List<Node> verticesArrayList = new ArrayList<>();
-//	private List<Node> verticesLinkedList = new LinkedList<>();
+	/**
+	 * Simple stopWatch to measure operation last time.
+	 */
+	Log4JStopWatch sw1 = new Log4JStopWatch("MyLogger");
+
 	private HashSet<Node> verticesHashSet = new HashSet<>();
-	//	private HashSet<Edge> edgesHashSet = new HashSet<>();
 	private int numVertices = 0;
 	private int numEdges = 0;
 
@@ -149,9 +152,7 @@ public class MapGraph {
 	 */
 	public List<GeographicPoint> bfs(GeographicPoint start,
 									 GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
-
+		sw1.start();
 		Queue<Node> nodeQueue = new LinkedList<>();
 		HashSet<Node> visitedSet = new HashSet<>();
 		HashMap<Node, Node> pathMap = new HashMap(); // parents map
@@ -168,6 +169,10 @@ public class MapGraph {
 
 			// put not visited current node neighbours to queue, visitedSet and pathMap(parents map)
 			for (Node nodeNext : getNeighboursCollection(currentNode)) {
+
+				// Hook for visualization.  See writeup.
+				nodeSearched.accept(nodeNext.getGeographicPoint());
+
 				if (!visitedSet.contains(nodeNext)) {
 					nodeQueue.add(nodeNext);
 					visitedSet.add(nodeNext);
@@ -175,7 +180,12 @@ public class MapGraph {
 				}
 			}
 		}
-		return convertMapToList(pathMap, startNode,endNode);
+
+		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
+		sw1.stop();
+		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
+		System.out.println("-- Edges: " + geographicPoints.size());
+		return geographicPoints;
 	}
 
 	private Node getNode(GeographicPoint start) {
@@ -197,14 +207,14 @@ public class MapGraph {
 
 	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node startNode, Node endNode) {
 
-		LinkedList<GeographicPoint> pathList = new LinkedList();
+		LinkedList<GeographicPoint> pathList = new LinkedList<>();
 		Node currentNode = endNode;
 		Node parent;
 
 		pathList.add(endNode.getGeographicPoint());
 
 		// pathMap is empty because start point and end point are same and there aren't any parents in map.
-		if(path.isEmpty()) return pathList;
+		if(path.isEmpty()) return null;
 
 		while(path.containsKey(currentNode)){
 			parent = path.get(currentNode);
@@ -239,14 +249,43 @@ public class MapGraph {
 	 *   start to goal (including both start and goal).
 	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, 
-										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
-	{
-		// TODO: Implement this method in WEEK 4
+										  GeographicPoint goal, Consumer<GeographicPoint> nodeSearched) {
+		sw1.start();
+		PriorityQueue<Node> nodeQueue = new PriorityQueue<>();
+		HashSet<Node> visitedSet = new HashSet<>();
+		HashMap<Node, Node> pathMap = new HashMap<>(); // parents map
 
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
-		
-		return null;
+		Node startNode = getNode(start);
+		Node endNode = getNode(goal);
+		Node currentNode;
+		nodeQueue.add(startNode);
+		visitedSet.add(startNode);
+
+		while (!nodeQueue.isEmpty()) {
+			currentNode = nodeQueue.poll();
+			if (currentNode.equals(endNode)) break;
+			visitedSet.add(currentNode);
+
+			// put not visited current node neighbours to queue, visitedSet and pathMap(parents map)
+			for (Node nodeNext : getNeighboursCollection(currentNode)) {
+
+				// Hook for visualization.  See writeup.
+				nodeSearched.accept(nodeNext.getGeographicPoint());
+
+				if (!visitedSet.contains(nodeNext)) {
+					nodeQueue.add(nodeNext);
+								visitedSet.add(nodeNext);			// ??? Already done
+					pathMap.put(nodeNext, currentNode);
+				}
+			}
+		}
+
+		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
+		sw1.stop();
+		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
+		System.out.println("-- Edges: " + (geographicPoints != null ? geographicPoints.size() : 0));
+		return geographicPoints;
+
 	}
 
 	/** Find the path from start to goal using A-Star search
@@ -291,12 +330,13 @@ public class MapGraph {
 
 			System.out.print("\nNode #" + (i++) + " geo point: " + node.getGeographicPoint()
 				+ "\nNode neighbours:\n");
-			node.getNeighbours().forEach((v) -> System.out.println(v));
+			node.getNeighbours().forEach(System.out::println);
 		}
 	}
 
 	public static void main(String[] args)
 	{
+
 		System.out.print("Making a new map...");
 		MapGraph firstMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");
@@ -317,10 +357,19 @@ public class MapGraph {
 		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
 		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
 
-		List<GeographicPoint> testroute = simpleTestMap.bfs(testStart,testEnd);
 		simpleTestMap.printGraph();
 
-		System.out.println(testroute);
+		simpleTestMap.sw1.start();
+
+		List<GeographicPoint> testroute = simpleTestMap.bfs(testStart,testEnd);
+
+		simpleTestMap.sw1.stop();
+		System.out.println("--Search time in ms :" + simpleTestMap.sw1.getElapsedTime());
+		System.out.println("If time = 0 its normal because search was very easy.");
+
+		System.out.println("\n*ROUT FROM: [" + testStart + "] TO: [" + testEnd + "]\n" +  testroute);
+		System.out.println("EDGES: " + testroute.size());
+
 
 
 //		System.out.println("Test 1 using simpletest: Dijkstra should be 9 and AStar should be 5");
