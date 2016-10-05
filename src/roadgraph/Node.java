@@ -6,6 +6,9 @@ import java.util.HashSet;
 
 /**
  * Created by BSV on 29.09.2016.
+ *
+ *  In this object is stored GeographicalPoint of Node (interception)
+ *  and a Set of all Roads (Edges). Road data in form of Edge class.
  */
 public class Node {
 

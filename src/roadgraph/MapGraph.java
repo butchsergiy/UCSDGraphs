@@ -31,6 +31,11 @@ public class MapGraph {
 	Log4JStopWatch sw1 = new Log4JStopWatch("MyLogger");
 
 	private HashSet<Node> verticesHashSet = new HashSet<>();
+
+	// maybe the best structure was
+	// TODO: IMPLEMENT this HashMap as main map data storage !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	private HashMap<GeographicPoint, LinkedList<Edge>> nodes = new HashMap<>();
+
 	private int numVertices = 0;
 	private int numEdges = 0;
 
@@ -204,7 +209,7 @@ public class MapGraph {
 	}
 
 
-	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node startNode, Node endNode) {
+	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node endNode) {
 
 		LinkedList<GeographicPoint> pathList = new LinkedList<>();
 		Node currentNode = endNode;
@@ -279,7 +284,7 @@ public class MapGraph {
 			}
 		}
 
-		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
+		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, endNode);
 		sw1.stop();
 		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
 		System.out.println("-- Edges: " + (geographicPoints != null ? geographicPoints.size() : 0));
@@ -359,7 +364,7 @@ public class MapGraph {
 //		simpleTestMap.printGraph();
 
 		List<GeographicPoint> testroute = simpleTestMap.bfs(testStart,testEnd);
-		testroute = simpleTestMap.bfs(testStart,testEnd);
+
 
 		System.out.println("\n*ROUT FROM: [" + testStart + "] TO: [" + testEnd + "]\n" +  testroute);
 		System.out.println("EDGES: " + testroute.size());
