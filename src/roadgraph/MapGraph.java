@@ -8,14 +8,13 @@
 package roadgraph;
 
 
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import org.perf4j.log4j.Log4JStopWatch;
-
 import geography.GeographicPoint;
+
+import org.perf4j.log4j.Log4JStopWatch;
 import util.GraphLoader;
 
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author UCSD MOOC development team and ButchSergiy
@@ -155,7 +154,7 @@ public class MapGraph {
 		sw1.start();
 		Queue<Node> nodeQueue = new LinkedList<>();
 		HashSet<Node> visitedSet = new HashSet<>();
-		HashMap<Node, Node> pathMap = new HashMap(); // parents map
+		HashMap<Node, Node> parentsMap = new HashMap(); // parents map
 
 		Node startNode = getNode(start);
 		Node endNode = getNode(goal);
@@ -176,12 +175,12 @@ public class MapGraph {
 				if (!visitedSet.contains(nodeNext)) {
 					nodeQueue.add(nodeNext);
 					visitedSet.add(nodeNext);
-					pathMap.put(nodeNext, currentNode);
+					parentsMap.put(nodeNext, currentNode);
 				}
 			}
 		}
 
-		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
+		List<GeographicPoint> geographicPoints = convertMapToList(parentsMap, endNode);
 		sw1.stop();
 		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
 		System.out.println("-- Edges: " + geographicPoints.size());
@@ -205,7 +204,7 @@ public class MapGraph {
 	}
 
 
-	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node startNode, Node endNode) {
+	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node endNode) {
 
 		LinkedList<GeographicPoint> pathList = new LinkedList<>();
 		Node currentNode = endNode;
@@ -280,7 +279,7 @@ public class MapGraph {
 			}
 		}
 
-		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
+		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, endNode);
 		sw1.stop();
 		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
 		System.out.println("-- Edges: " + (geographicPoints != null ? geographicPoints.size() : 0));
@@ -336,7 +335,6 @@ public class MapGraph {
 
 	public static void main(String[] args)
 	{
-
 		System.out.print("Making a new map...");
 		MapGraph firstMap = new MapGraph();
 		System.out.print("DONE. \nLoading the map...");
