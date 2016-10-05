@@ -181,9 +181,9 @@ public class MapGraph {
 			}
 		}
 
-		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
+		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, endNode);
 		sw1.stop();
-		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
+		System.out.println("\n-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
 		System.out.println("-- Edges: " + geographicPoints.size());
 		return geographicPoints;
 	}
@@ -205,7 +205,7 @@ public class MapGraph {
 	}
 
 
-	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node startNode, Node endNode) {
+	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node endNode) {
 
 		LinkedList<GeographicPoint> pathList = new LinkedList<>();
 		Node currentNode = endNode;
@@ -280,7 +280,7 @@ public class MapGraph {
 			}
 		}
 
-		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
+		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, endNode);
 		sw1.stop();
 		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
 		System.out.println("-- Edges: " + (geographicPoints != null ? geographicPoints.size() : 0));
@@ -352,20 +352,15 @@ public class MapGraph {
 		 */
 
 		MapGraph simpleTestMap = new MapGraph();
-		GraphLoader.loadRoadMap("data/testdata/simpletest.map", simpleTestMap);
+		GraphLoader.loadRoadMap("data/maps/lviv.map", simpleTestMap);
 
-		GeographicPoint testStart = new GeographicPoint(1.0, 1.0);
-		GeographicPoint testEnd = new GeographicPoint(8.0, -1.0);
+		GeographicPoint testStart = new GeographicPoint(49.8055204, 23.9817184);
+		GeographicPoint testEnd = new GeographicPoint(49.8413975, 24.0441223);
 
-		simpleTestMap.printGraph();
-
-		simpleTestMap.sw1.start();
+//		simpleTestMap.printGraph();
 
 		List<GeographicPoint> testroute = simpleTestMap.bfs(testStart,testEnd);
-
-		simpleTestMap.sw1.stop();
-		System.out.println("--Search time in ms :" + simpleTestMap.sw1.getElapsedTime());
-		System.out.println("If time = 0 its normal because search was very easy.");
+		testroute = simpleTestMap.bfs(testStart,testEnd);
 
 		System.out.println("\n*ROUT FROM: [" + testStart + "] TO: [" + testEnd + "]\n" +  testroute);
 		System.out.println("EDGES: " + testroute.size());
