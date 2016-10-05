@@ -2,7 +2,6 @@ package roadgraph;
 
 import geography.GeographicPoint;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -11,10 +10,7 @@ import java.util.HashSet;
 public class Node {
 
     private final GeographicPoint geographicPoint;
-
     private HashSet<Edge> neighbours = new HashSet<>();
-
-
 
     public Node(GeographicPoint geographicPoint) {
         this.geographicPoint = geographicPoint;
@@ -23,7 +19,6 @@ public class Node {
     public GeographicPoint getGeographicPoint() {
         return new GeographicPoint(geographicPoint.getX(),geographicPoint.getY());
     }
-
 
     public HashSet<Edge> getNeighbours() {
         return new HashSet<>(neighbours);

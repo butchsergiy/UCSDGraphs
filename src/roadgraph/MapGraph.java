@@ -8,14 +8,13 @@
 package roadgraph;
 
 
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import org.perf4j.log4j.Log4JStopWatch;
-
 import geography.GeographicPoint;
+
+import org.perf4j.log4j.Log4JStopWatch;
 import util.GraphLoader;
 
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author UCSD MOOC development team and ButchSergiy
@@ -205,7 +204,7 @@ public class MapGraph {
 	}
 
 
-	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node endNode) {
+	private List<GeographicPoint> convertMapToList(HashMap<Node, Node> path, Node startNode, Node endNode) {
 
 		LinkedList<GeographicPoint> pathList = new LinkedList<>();
 		Node currentNode = endNode;
@@ -280,7 +279,7 @@ public class MapGraph {
 			}
 		}
 
-		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, endNode);
+		List<GeographicPoint> geographicPoints = convertMapToList(pathMap, startNode, endNode);
 		sw1.stop();
 		System.out.println("-- SEARCH method BFS. Run time in ms: " + sw1.getElapsedTime());
 		System.out.println("-- Edges: " + (geographicPoints != null ? geographicPoints.size() : 0));

@@ -5,7 +5,7 @@ import geography.GeographicPoint;
 /**
  * Class represents edge between two GeographicPoints (lat, lon pairs) that are already in the graph.
  * The edges represent streets segments, and hence they connect intersections.
- */
+*/
 public class Edge {
 
     private final GeographicPoint from;
