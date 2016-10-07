@@ -12,8 +12,8 @@ public class Edge {
     private final GeographicPoint to;
     private final String roadName;
     private final String roadType;      // the roadType is the kind of road (e.g. "residential").
-    private final double length;        // the length of this road segment, in km.
 
+    private final double length;        // the length of this road segment, in km.
 
 /**
  * Class represents edge between two GeographicPoints (lat, lon pairs) that are already in the graph.
@@ -34,6 +34,10 @@ public class Edge {
 
     public GeographicPoint getTo() {
         return new GeographicPoint(to.getX(), to.getY());
+    }
+
+    public double getLength() {
+        return length;
     }
 
     @Override
