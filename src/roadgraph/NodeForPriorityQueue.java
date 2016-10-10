@@ -22,15 +22,6 @@ class NodeForPriorityQueue {
         this.distanceToEndNode = distanceToEndNode;
     }
 
-    public double getDistanceToEndNode() {
-        return distanceToEndNode;
-    }
-
-
-    public void setDistanceToEndNode(double distanceToEndNode) {
-        this.distanceToEndNode = distanceToEndNode;
-    }
-
     public GeographicPoint getNodeGeoPoint() {
         return nodeGeoPoint;
     }
@@ -45,5 +36,28 @@ class NodeForPriorityQueue {
 
     public void setDistanceToStartNode(double distanceToStartNode) {
         this.distanceToStartNode = distanceToStartNode;
+    }
+
+    public double getDistanceToEndNode() {
+        return distanceToEndNode;
+    }
+
+    public void setDistanceToEndNode(double distanceToEndNode) {
+        this.distanceToEndNode = distanceToEndNode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NodeForPriorityQueue that = (NodeForPriorityQueue) o;
+
+        return nodeGeoPoint.equals(that.nodeGeoPoint);
+    }
+
+    @Override
+    public int hashCode() {
+        return nodeGeoPoint.hashCode();
     }
 }

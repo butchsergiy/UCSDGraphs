@@ -269,8 +269,9 @@ public class MapGraph {
 
 		PriorityQueue<NodeForPriorityQueue> nodePriorityQueue = new PriorityQueue<>(nodePQueueComparator);
 		HashSet<GeographicPoint> visitedSet = new HashSet<>();
-		HashMap<GeographicPoint, GeographicPoint> parentsMap = new HashMap();
-		double distanceToCurrentNode = 0;
+		HashMap<NodeForPriorityQueue, List<GeographicPoint>> parentsMap = new HashMap();
+		HashMap<NodeForPriorityQueue, NodeForPriorityQueue> parentsMap2 = new HashMap();
+		double distanceToCurrentNode = 0d;
 
 		GeographicPoint currentNode;
 		nodePriorityQueue.add(new NodeForPriorityQueue(start,0d));
@@ -280,6 +281,7 @@ public class MapGraph {
 			distanceToCurrentNode = nodePriorityQueue.peek().getDistanceToStartNode();
 
 			currentNode = nodePriorityQueue.poll().getNodeGeoPoint();
+			nodeSearched.accept(currentNode);
 
 			if (currentNode.equals(goal)) break;
 
@@ -289,21 +291,30 @@ public class MapGraph {
 
 			// iterate over list of edges of the Node
 			// and for each Edge check its second point
+			NodeForPriorityQueue neighbourNodePQ;
 			for (Edge nextEdge : nodesHashMap.get(currentNode)) {
-				GeographicPoint neighbourNode = nextEdge.getTo();
+				if (!visitedSet.contains(nextEdge.getTo())) {
 
-				// Hook for visualization.  See writeup.
-				nodeSearched.accept(neighbourNode);
+					neighbourNodePQ = new NodeForPriorityQueue(nextEdge.getTo(), distanceToCurrentNode + nextEdge.getLength());
 
-				if (!visitedSet.contains(neighbourNode)) {
-					nodePriorityQueue.add(
-							new NodeForPriorityQueue(neighbourNode, distanceToCurrentNode + nextEdge.getLength()));
-					parentsMap.put(neighbourNode, currentNode);
+					if (parentsMap2.get(neighbourNodePQ) == null
+							|| parentsMap2.get(neighbourNodePQ).getDistanceToStartNode() > neighbourNodePQ.getDistanceToStartNode()) {
+						nodePriorityQueue.add(neighbourNodePQ);
+
+						List parentsList = new LinkedList();
+						if (parentsMap.get(currentNode) != null) parentsList.addAll(parentsMap.get(currentNode));
+						parentsList.add(currentNode);
+
+						parentsMap.put(neighbourNodePQ, parentsList);
+						parentsMap2.put(neighbourNodePQ, neighbourNodePQ);
+					}
 				}
 			}
 		}
 
-		List<GeographicPoint> geographicPoints = convertMapToList(parentsMap, goal);
+		List<GeographicPoint> geographicPoints = parentsMap.get(goal);
+
+		geographicPoints.add(goal);
 
 		sw1.stop();
 
@@ -452,9 +463,9 @@ public class MapGraph {
 		testStart = new GeographicPoint(1.0, 1.0);
 		testEnd = new GeographicPoint(8.0, -1.0);
 
-		List<GeographicPoint> testrouteDFS = simpleTestMap.bfs(testStart,testEnd);
+//		List<GeographicPoint> testrouteDFS = simpleTestMap.bfs(testStart,testEnd);
 		List<GeographicPoint> testrouteDIJ = simpleTestMap.dijkstra(testStart,testEnd);
-		List<GeographicPoint> testrouteAStar = simpleTestMap.aStarSearch(testStart,testEnd);
+//		List<GeographicPoint> testrouteAStar = simpleTestMap.aStarSearch(testStart,testEnd);
 
 
 		System.out.println("/////////////////////////////////////////////////////////////////////////////////////////");
