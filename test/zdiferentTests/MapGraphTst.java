@@ -1,4 +1,4 @@
-package roadgraph;
+package zdiferentTests;
 
 import java.util.*;
 
@@ -96,7 +96,7 @@ class Board{
 
 
 
-public class MapGraphTest {
+public class MapGraphTst {
     public static void main(String[] args){
 
         Board board = new Board(9, 9);

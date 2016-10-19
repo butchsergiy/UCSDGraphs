@@ -1,18 +1,9 @@
 package roadgraph;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
-import java.util.function.Consumer;
-
+import geography.GeographicPoint;
 import util.GraphLoader;
-import geography.*;
+
+import java.util.List;
 
 /**
  * @author UCSD MOOC Development Team
@@ -63,6 +54,7 @@ public class AStarGrader implements Runnable {
      * @param start The point to start from
      * @param end The point to end at
      */
+    @SuppressWarnings("Duplicates")
     public void runTest(int i, String file, String desc, GeographicPoint start, GeographicPoint end) {
         MapGraph graph = new MapGraph();
 
@@ -115,19 +107,24 @@ public class AStarGrader implements Runnable {
     }
 
     /** Run the grader */
+    @SuppressWarnings("Duplicates")
     public void run() {
         feedback = "";
 
         correct = 0;
 
         try {
-            runTest(1, "map1.txt", "MAP: Straight line (-3 <- -2 <- -1 <- 0 -> 1 -> 2-> 3 ->...)", new GeographicPoint(0, 0), new GeographicPoint(6, 6));
+            runTest(1, "map1.txt", "MAP: Straight line (-3 <- -2 <- -1 <- 0 -> 1 -> 2-> 3 ->...)",
+                    new GeographicPoint(0, 0), new GeographicPoint(6, 6));
 
-            runTest(2, "map2.txt", "MAP: Example map from the writeup", new GeographicPoint(7, 3), new GeographicPoint(4, -1));
+            runTest(2, "map2.txt", "MAP: Example map from the writeup",
+                    new GeographicPoint(7, 3), new GeographicPoint(4, -1));
 
-            runTest(3, "map3.txt", "MAP: Right triangle (with a little detour)", new GeographicPoint(0, 0), new GeographicPoint(0, 4));
+            runTest(3, "map3.txt", "MAP: Right triangle (with a little detour)",
+                    new GeographicPoint(0, 0), new GeographicPoint(0, 4));
 
-            runTest(4, "ucsd.map", "UCSD MAP: Intersections around UCSD", new GeographicPoint(32.8709815, -117.2434254), new GeographicPoint(32.8742087, -117.2381344));
+            runTest(4, "ucsd.map", "UCSD MAP: Intersections around UCSD",
+                    new GeographicPoint(32.8709815, -117.2434254), new GeographicPoint(32.8742087, -117.2381344));
 
             if (correct == TESTS)
                 feedback = "All tests passed. Great job!" + feedback;
@@ -138,7 +135,7 @@ public class AStarGrader implements Runnable {
             feedback += "\nError during runtime: " + e;
             e.printStackTrace();
         }
-            
+
         System.out.println(printOutput((double)correct / TESTS, feedback));
     }
 }
